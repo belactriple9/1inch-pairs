@@ -17,83 +17,9 @@
         let signer;
         let abi = "";
 
-        async function cancelOrder(e) {
-
-            alert("not implemented, please go to app.1inch.io")
-            return;
-
-            let order = $(this).attr("value");
-            //console.log(order);
-            let contract;
-            let temp;
-            try {
-                temp = await provider.getNetwork();
-            } catch (error) {
-                alert("please connect your metamask")
-                return; //early exit
-            }
-            let chain = temp.chainId
-
-            await fetch("https://cdn.jsdelivr.net/npm/@1inch/limit-order-protocol@1.3.0/abi/LimitOrderProtocol.json").then(
-                res => {
-                    return res.json();
-                }).then(data => abi = data)
-
-            console.log(abi);
-
-            switch (chain) {
-                case (1):
-                    contract = "0x3ef51736315f52d568d6d2cf289419b9cfffe782";
-                    break;
-                case (56):
-                    contract = "0xe3456f4ee65e745a44ec3bcb83d0f2529d1b84eb";
-                    break;
-                case (137):
-                    contract = "0xb707d89d29c189421163515c59e42147371d6857";
-                    break;
-                default:
-                    alert("There was an error, unsupported chain");
-            }
-
-            let LOContract = new ethers.Contract(contract, abi, signer)
-
-            let callData;
-
-
-            if (await signer.getAddress() != null && await signer.getAddress() != "") {
-                //alert("canceling")
-
-                let txConfig = {
-                    to: contract,
-                    from: signer.getAddress(),
-                    //data: callData, //need to figure out how to get this
-                    value: '0',
-                    gasLimit: 50_000,
-                    //gas price should be gotten by ethersjs
-                    //nonce should be gotten by ethersjs
-                }
-
-            } else {
-                //wallet isn't connected so we get mad
-                alert("please connect your metamask!");
-            }
-        }
-
         $(() => {
 
-            $('#connect').on('click', async function (e) {
-                e.preventDefault();
 
-                window.ethereum.enable().then(
-                    provider = new ethers.providers.Web3Provider(window.ethereum));
-                signer = provider.getSigner();
-
-                console.log(signer.getAddress());
-
-                if (await signer.getAddress() != null && await signer.getAddress() != "") {
-                    $('#wallet-connected').text("Wallet connected: " + await signer.getAddress());
-                }
-            })
 
             $('#next').on('click', (e) => {
                 e.preventDefault();
@@ -107,6 +33,7 @@
                     localStorage.setItem("page", Number.parseInt(localStorage.getItem("page")) - 1);
                 $('#page-number').text(localStorage.getItem("page"));
             })
+
 
             $('#search-btn').on('click', (e) => {
                 e.preventDefault(); //*CRITICAL* : this "catches" the form submit event and stops it
@@ -369,6 +296,16 @@
                 <h1>1inch Limit orders</h1>
             </div>
 
+            <div id="chain-select">
+                <form id="network-drop-down">
+                    <select id="drop-down">
+                        <option value="1">1 ETH</option>
+                        <option value="56">56 BSC</option>
+                        <option value="137">137 MATIC</option>
+                    </select>
+                </form>
+            </div>
+
             <div id="address-input">
                 <form id="address-input-form" style="height:30px">
                     <input type="text" id="address" style="width:250px;" placeholder="Enter an Address"></input>
@@ -397,6 +334,9 @@
                 <input type="text" id="ToToken" style="width:95%; margin:3px;"
                     placeholder="Enter To Token Contract"></input>
             </form>
+            <pre style="color:ivory">This is where a list of pairs 
+on page ${page} will show up</pre>
+            <hr>
             <div id="pair-list">
 
             </div>
@@ -405,18 +345,82 @@
             <div id="top-container">
                 <div id="top-mid">
                     <div id="chart">
-                        And we have text?
+                        //todo https://github.com/1inch/dexcandlesx
                     </div>
                 </div>
                 <div id="top-right">
+                    <pre style="color: ivory">This is where the spread is displayed</pre>
+                    <hr>
                     <div id="spread">
 
                     </div>
                 </div>
             </div>
             <div id="bottom-container">
+                <pre style="color: ivory">This is where orders will be listed and scrollable hopefully?</pre>
+                <hr>
                 <div id="orders">
-
+                    Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or
+                    web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought
+                    to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen
+                    book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print,
+                    graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who
+                    is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type
+                    specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out
+                    print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying
+                    out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th
+                    century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in
+                    a type specimen book.
                 </div>
             </div>
         </div>
@@ -430,6 +434,16 @@
 
 
 <style>
+    #orders {
+        position: relative;
+        right: -15px;
+        /* Increase/Decrease this value for cross-browser compatibility */
+        overflow-y: scroll;
+        color: ivory;
+        word-wrap: break-word;
+        max-height: 15vh;
+    }
+
     #header-text {
         color: white;
         display: table-cell;
@@ -439,19 +453,22 @@
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     }
 
-    #address-input {
-        margin-top: 30px;
-        margin-right: 30px;
-        margin-bottom: 30px;
-
-    }
-
     #header {
         display: flex;
     }
 
     #address-input {
         align-content: flex-end;
+        margin-top: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+    }
+
+    #chain-select {
+        align-content: flex-end;
+        margin-top: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
     }
 
     #boxes-table {
@@ -462,8 +479,8 @@
 
     #bottom-container {
         height: 100%;
-        background-image: linear-gradient(to right, green, blue);
-
+        background-color: rgb(19, 29, 39);
+        vertical-align: top;
     }
 
     #top-container {
@@ -472,37 +489,40 @@
         display: table;
         height: 70vh;
         width: 100%;
-        background-image: linear-gradient(to right, red, white)
+        vertical-align: top;
     }
 
     #top-mid {
         display: table-cell;
+        position: relative;
         margin: 0;
         padding: 0;
         width: 65vw;
         height: 100%;
-        background-color: ivory;
+        vertical-align: top;
+        background-image: linear-gradient(to right, rgba(13, 24, 42), rgba(8, 12, 21), rgba(28, 19, 38));
 
     }
 
     #top-right {
         display: table-cell;
-
+        vertical-align: top;
         height: 100%;
-        background-color: brown;
+        background-color: rgb(7, 14, 20);
     }
 
     #container {
         width: 100%;
         height: 100%;
         display: table;
-        background-image: linear-gradient(to right, rgba(13, 24, 42), rgba(8, 12, 21), rgba(28, 19, 38));
+        background-image: linear-gradient(to right, rgba(13, 24, 42), rgba(13, 24, 42), rgba(8, 12, 21), rgba(28, 19, 38), rgba(28, 19, 38));
     }
 
     #body-container {
         width: 100%;
         height: 100vh;
         display: table;
+        vertical-align: top;
         background-color: rgba(20, 24, 33)
     }
 
@@ -525,10 +545,20 @@
         background-color: ivory
     }
 
+    #chart {
+        display: flex;
+        color: ivory;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     body {
         vertical-align: top;
         padding: 0;
         margin: 0px;
+        overflow: hidden;
     }
 </style>
 
