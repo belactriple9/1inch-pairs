@@ -121,7 +121,7 @@
                 }
 
                 function getLOPairList(fromToken, toToken, chain) {
-                    let url = "https://limit-orders.1inch.exchange/v1.0/" + chain + "/limit-order/all?page=" + localStorage.getItem("page") + "&limit=100&statuses=%5B1%2C2%2C3%5D&sortBy=takerRate&takerAsset=" + toToken + "&makerAsset=" + fromToken;
+                    let url = "https://limit-orders.1inch.exchange/v2.0/" + chain + "/limit-order/all?page=" + localStorage.getItem("page") + "&limit=100&statuses=%5B1%2C2%2C3%5D&sortBy=takerRate&takerAsset=" + toToken + "&makerAsset=" + fromToken;
                     $.ajax({ method: "GET", dataType: "json", url: url }).done((ret) => {
                         //console.log(ret);
                         parseLOPairResults(ret, fromToken, toToken, chain);
@@ -207,7 +207,7 @@
                 }
 
                 function getAddressLOList(address, chain) {
-                    let url = "https://limit-orders.1inch.exchange/v1.0/" + chain + "/limit-order/address/" + address + "?page=" + localStorage.getItem("page") + "&limit=100&statuses=%5B1%2C2%5D"
+                    let url = "https://limit-orders.1inch.exchange/v2.0/" + chain + "/limit-order/address/" + address + "?page=" + localStorage.getItem("page") + "&limit=100&statuses=%5B1%2C2%5D"
                     $.ajax({ method: "GET", dataType: "json", url: url }).done((ret) => {
                         console.log(ret);
                         parseAddressLOResults(ret, address, chain);
@@ -340,7 +340,7 @@
 
                 // alert(fromToken);
                 // alert(toToken);
-                let url = "https://limit-orders.1inch.exchange/v1.0/" + chain + "/limit-order/all?page=" + localStorage.getItem("page") + "&limit=100&statuses=%5B1%5D&sortBy=createDateTime&takerAsset=" + toToken + "&makerAsset=" + fromToken; //unspecified tokens to just load "random" orders
+                let url = "https://limit-orders.1inch.exchange/v2.0/" + chain + "/limit-order/all?page=" + localStorage.getItem("page") + "&limit=100&statuses=%5B1%5D&sortBy=createDateTime&takerAsset=" + toToken + "&makerAsset=" + fromToken; //unspecified tokens to just load "random" orders
                 $.ajax({ method: "GET", dataType: "json", url: url }).done((ret) => {
                     console.log(ret);
                     loadPairs(ret, chain);
